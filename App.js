@@ -1,33 +1,52 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { axios } from 'axios';
-
-
-export default function App() {
-  let x = 1;
-  console.log("App executed");
-//  const fetchData = () => {
-//    const baseURL = "https://logindevsite.wpengine.com/wp-json/mo/v1/get_posts";
-//    axios.get(`${baseURL}`).then((response) => console.log(response.data));
-//  };
-//  useEffect(() => {
-//    fetchData();
-//  }, []);
-
-  return (
-    <View style={styles.container}>
-      <Text>Hello Haniah!!</Text>
-      //{fetchData} this should show
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import axios from 'axios';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 100, // Set marginTop to the height of your device's status bar
+  },
+  text: {
+    fontSize: 24,
+    fontFamily: 'Helvetica',
   },
 });
+
+export default function App() {
+  return (
+   <SafeAreaView style={styles.container}>
+    <View>
+      <Fetch1 />
+    </View>
+    </SafeAreaView>
+  );
+}
+
+
+//https://logindevsite.wpengine.com/wp-json/mentor-app/v1/posts/6
+function Fetch1() {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    axios.get('https://logindevsite.wpengine.com/wp-json/mentor-app/v1/posts/6')
+      .then(response => {
+        setData(response.data);
+        console.log(response.data);
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
+  return (
+    <View>
+      {data && (
+        <View>
+          <Text>{data.title}</Text>
+          <Text>{data[0].post_content}</Text>
+        </View>
+      )}
+    </View>
+  );
+}
